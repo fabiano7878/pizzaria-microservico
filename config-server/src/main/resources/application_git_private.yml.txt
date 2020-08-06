@@ -1,0 +1,9 @@
+server:
+  port: 8888
+  
+spring:  cloud:    config:      server:        git:
+         uri: https://github.com/fabiano7878/repo-fornecedor         search-paths: fornecedor
+         ignoreLocalSshSettings: true
+         hostKey: someHostKey
+         hostKeyAlgorithm: ssh-rsa
+         privateKey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDuvSyAIbvcsqnS1Lxn6CozB1hogumr5cWky6VOiZra9KfU6VMFoMT2iyAR0YbLyrio4DVlclPhtVZmfMUucukubfdf9HiVZ8uZINdFFLaWJBea3QwIhhNaLDRMBNU7Wy9s3ZxqGgzJatKpXVeCKZ3B4C0T00wpb5xVNHCoi4HUs2ZBAkqEZ/SlGcGhj1OSp5O1jgDHAzNgfJnCaBf60QPAaZ1zYrwfbGBxNYa9FMcNagfk73l0V/CZ5i9ljr4gdKKoyAcv1+RRXuwJFH3pTJP4u1nG7d580qgUr9p2REQzJ4b/5Rw9nPEA+cX7yFJPY88DMTj1VHfO/XQ4YtGLJhlAVDxOOkPJIlfQFhItucVGrE1dGDJVPjtsPnDBK/jd7EOznmC7my/RJt81Bu0wK/RudbMIuw3KSMg3nQDG4HAxqnBalIlWwI/oSyyHnMubBfpoUGUYKxIOr5AACK8mh/e8q/dMls6hkgB+IdYb+mcUWgFrPGGnwKHVta7Pr5sHC1Q/u/ODbAj4p+8/9EBrm3RD7IHS2QRiI5UHo3rBoJQgsT1vrIJCl9pnVD6Et8OPmRWoSpj2STpIrWWwCqm0HmrZRawc0dFbzTAybI9qm8pzvIbWiT2mKxFcT876J2WuBQjjUGXHqgHKXYSDIjdg9wyH1J0y4KqdNTr2ooePaSJ5VQ== fabmarley78@hotmail.com
