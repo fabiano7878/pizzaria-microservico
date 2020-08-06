@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    username: root
+    password: faboy78
+    url: jdbc:mysql://localhost:3306/pizzarias
+  jpa:
+    hibernate:
+      ddl-auto: update
