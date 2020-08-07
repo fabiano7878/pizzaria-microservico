@@ -1,7 +1,7 @@
-package br.com.microservico.loja.dto;
+package br.com.microservico.fornecedor.dto;
 
-public class ItensCompraDTO {
-	
+public class ItemDoPedidoDTO {
+
 	private long id;
 	
 	private int quantidade;

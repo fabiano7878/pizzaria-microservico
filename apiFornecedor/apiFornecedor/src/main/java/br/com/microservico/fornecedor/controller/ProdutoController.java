@@ -7,19 +7,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.microservico.fornecedor.model.InfoFornecedor;
-import br.com.microservico.fornecedor.service.InfoService;
+import br.com.microservico.fornecedor.model.Produto;
+import br.com.microservico.fornecedor.service.ProdutoService;
 
 @RestController
-@RequestMapping("/info")
-public class InfoController {
-	
+@RequestMapping("/produto")
+public class ProdutoController {
+
 	@Autowired
-	private InfoService infoService;
+	private ProdutoService produtoService;
 	
 	@RequestMapping("/{estado}")
-	public List <InfoFornecedor> getInfoPorEstado(@PathVariable("estado") String estado) {
-		
-		return infoService.getInfoPorEstado(estado);
+	public List<Produto> getProdutosPorEstado(@PathVariable("estado") String estado) {
+		return produtoService.getProdutosPorEstado(estado);
 	}
 }

@@ -1,28 +1,32 @@
 package br.com.microservico.fornecedor.model;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class InfoFornecedor {
-	
+public class Produto {
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY) 
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	private String nome;
 	
-	private String endereco;
-	
 	private String estado;
+	
+	private String descricao;
+	
+	private BigDecimal preco;
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -34,12 +38,20 @@ public class InfoFornecedor {
 		this.nome = nome;
 	}
 
-	public String getEndereco() {
-		return endereco;
+	public String getDescricao() {
+		return descricao;
 	}
 
-	public void setEndereco(String endereco) {
-		this.endereco = endereco;
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+
+	public BigDecimal getPreco() {
+		return preco;
+	}
+
+	public void setPreco(BigDecimal preco) {
+		this.preco = preco;
 	}
 
 	public String getEstado() {

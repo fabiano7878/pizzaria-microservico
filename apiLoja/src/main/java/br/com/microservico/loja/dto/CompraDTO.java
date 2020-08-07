@@ -1,4 +1,4 @@
-package br.com.microservico.loja.DTO;
+package br.com.microservico.loja.dto;
 
 import java.util.List;
 
