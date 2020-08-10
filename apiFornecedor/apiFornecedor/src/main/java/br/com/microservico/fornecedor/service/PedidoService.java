@@ -3,6 +3,8 @@ package br.com.microservico.fornecedor.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,8 @@ import br.com.microservico.fornecedor.repository.ProdutoRepository;
 @Service
 public class PedidoService {
 	
+	private static final Logger LOG = LoggerFactory.getLogger(PedidoService.class);
+	
 	@Autowired
 	private PedidoRepository pedidoRepository;
 	
@@ -28,6 +32,7 @@ public class PedidoService {
 			return null;
 		}
 		
+		LOG.info("Criando e Salvando o pedido");
 		List<PedidoItem> pedidoItens = toPedidoItem(itens);
 		Pedido pedido = new Pedido(pedidoItens);
 		pedido.setTempoDePreparo(calculoTempoPreparo(itens.size()));

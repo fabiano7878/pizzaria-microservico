@@ -2,6 +2,8 @@ package br.com.microservico.loja.service;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +19,14 @@ public class CompraService {
 	@Autowired
 	private FornecedorClient fornecedorClient;
 	
+	private static final Logger LOG = LoggerFactory.getLogger(CompraService.class);
+	
 	public Compra realizaCompra(CompraDTO compra) {
 		
+		LOG.info("Buscando informações do fornecedor do Estado: {}", compra.getEndereco().getEstado());
 		List <InfoFornecedorDTO> listaInfo = fornecedorClient.getInfoPorEstado(compra.getEndereco().getEstado());
 		
+		LOG.info("Realizando um pedido");
 		InfoPedidoDTO pedido = fornecedorClient.realizaPedido(compra.getItens());
 		
 		Compra compraSalva =  new Compra();
@@ -33,6 +39,7 @@ public class CompraService {
 			System.out.println(fornecedor.toString());			
 		}
 		
+		LOG.info("Compra Salva id da compra: {}", compraSalva.getIdPedido());
 		return compraSalva;
 	}
 
