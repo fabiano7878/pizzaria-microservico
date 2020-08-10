@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+
 import br.com.microservico.loja.client.FornecedorClient;
 import br.com.microservico.loja.dto.CompraDTO;
 import br.com.microservico.loja.dto.InfoFornecedorDTO;
@@ -21,7 +23,14 @@ public class CompraService {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(CompraService.class);
 	
+	@HystrixCommand(fallbackMethod = "realizaCompraFallBack")
 	public Compra realizaCompra(CompraDTO compra) {
+		
+		//Para entendimento e testes do circuit break e usando mertodo para o Fallback com o Hystrix
+		/*
+		 * try { Thread.sleep(2000); } catch (InterruptedException e) { // TODO
+		 * Auto-generated catch block e.printStackTrace(); }
+		 */
 		
 		LOG.info("Buscando informações do fornecedor do Estado: {}", compra.getEndereco().getEstado());
 		List <InfoFornecedorDTO> listaInfo = fornecedorClient.getInfoPorEstado(compra.getEndereco().getEstado());
@@ -40,9 +49,12 @@ public class CompraService {
 		}
 		
 		LOG.info("Compra Salva id da compra: {}", compraSalva.getIdPedido());
+		
+		
+		
 		return compraSalva;
 	}
-
+	
 	
 	/**
 	 * Estas 2 instancias são utilizadas somente no metodo comentado abaixo
@@ -80,5 +92,22 @@ public class CompraService {
 	  	 
 	  	  System.out.println(exchange.getBody().getEndereco()); }
 	 */
+	
+	
+/**
+ * 
+ * Para entendimento e testes do circuit break e usando mertodo para o Fallback com o Hystrix
+ * 
+ */
+public Compra realizaCompraFallBack(CompraDTO compra) {
+		
+		LOG.info("Estamos armazenando sua compra e faremos o processo de clunsão após nossas dificuldades tecnicas!");
+				
+		Compra compraSalvaFallBack =  new Compra();		
+		compraSalvaFallBack.setEnderecoDestino(compra.getEndereco().toString());
+
+		LOG.info("Compra guardada com sucesso, em breve informaremos o resumo da compra!");
+		return compraSalvaFallBack;
+	}
 
 }
