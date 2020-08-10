@@ -10,13 +10,13 @@
 		<syslogHost>logs5.papertrailapp.com</syslogHost>
 		<port>39657</port>
 		<facility>USER</facility>
-		<suffixPattern>my-app: %logger %msg</suffixPattern>
+		<suffixPattern>${CONSOLE_LOG_PATTERN}</suffixPattern>
+		<charset>utf8</charset>
 	</appender>
 	<appender name="STDOUT"
 		class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
-			<pattern>${CONSOLE_LOG_PATTERN}</pattern>
-			 <charset>utf8</charset>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{5} - %msg%n</pattern>			 
 		</encoder>
 	</appender>
 
