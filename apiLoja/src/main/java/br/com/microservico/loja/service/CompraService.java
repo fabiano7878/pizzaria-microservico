@@ -13,7 +13,9 @@ import br.com.microservico.loja.client.FornecedorClient;
 import br.com.microservico.loja.dto.CompraDTO;
 import br.com.microservico.loja.dto.InfoFornecedorDTO;
 import br.com.microservico.loja.dto.InfoPedidoDTO;
+import br.com.microservico.loja.dto.InfoPedidoItemDTO;
 import br.com.microservico.loja.modelo.Compra;
+import br.com.microservico.loja.repository.CompraRepository;
 
 @Service
 public class CompraService {
@@ -21,14 +23,17 @@ public class CompraService {
 	@Autowired
 	private FornecedorClient fornecedorClient;
 	
+	@Autowired
+	private CompraRepository compraRepository;
+	
 	private static final Logger LOG = LoggerFactory.getLogger(CompraService.class);
 	
-	@HystrixCommand(fallbackMethod = "realizaCompraFallBack")
+	@HystrixCommand(fallbackMethod = "realizaCompraFallBack", threadPoolKey = "realizaCompraThreadPòol")
 	public Compra realizaCompra(CompraDTO compra) {
 		
 		//Para entendimento e testes do circuit break e usando mertodo para o Fallback com o Hystrix
 		/*
-		 * try { Thread.sleep(2000); } catch (InterruptedException e) { // TODO
+		 * try { Thread.sleep(2000); } catch (InterruptedException e) { // 
 		 * Auto-generated catch block e.printStackTrace(); }
 		 */
 		
@@ -38,11 +43,14 @@ public class CompraService {
 		LOG.info("Realizando um pedido");
 		InfoPedidoDTO pedido = fornecedorClient.realizaPedido(compra.getItens());
 		
-		Compra compraSalva =  new Compra();
+		Compra compraSalva = new Compra();
 		
 		compraSalva.setIdPedido(pedido.getId());
 		compraSalva.setTempoDePreparo(pedido.getTempoDePreparo());
 		compraSalva.setEnderecoDestino(compra.getEndereco().toString());
+		compraSalva.setItens(compra.getItens().stream().map(Object::toString).reduce("", String::concat));
+		compraSalva.setQuantidadeDeProdutosNaCompra(compra.getItens().size());
+		compraSalva.setTotalDeItensNaCompra(pedido.getItens().stream().mapToInt(InfoPedidoItemDTO::getQuantidade).sum());
 		
 		for(InfoFornecedorDTO fornecedor :listaInfo) {			
 			System.out.println(fornecedor.toString());			
@@ -50,9 +58,35 @@ public class CompraService {
 		
 		LOG.info("Compra Salva id da compra: {}", compraSalva.getIdPedido());
 		
-		
-		
+		//Salvando a compra na base de dados
+		compraRepository.save(compraSalva);
 		return compraSalva;
+	}
+	
+	/**
+	 * Para consultar compras cadastradas, pelo id do pedido
+	 * @param id
+	 * @return
+	 */
+	@HystrixCommand(threadPoolKey = "getByIdThreadPool")
+	public Compra getById(Long id) {
+		return compraRepository.findById(id).orElse(new Compra());
+	}
+	
+	/**
+	 * 
+	 * Para entendimento e testes do circuit break e usando mertodo para o Fallback com o Hystrix
+	 * 
+	 */
+	public Compra realizaCompraFallBack(CompraDTO compra) {
+		
+		LOG.info("Estamos armazenando sua compra e faremos o processo de conclusão após nossas dificuldades tecnicas!");
+		
+		Compra compraSalvaFallBack =  new Compra();		
+		compraSalvaFallBack.setEnderecoDestino(compra.getEndereco().toString());
+		
+		LOG.info("Compra guardada com sucesso, em breve informaremos o resumo da compra!");
+		return compraSalvaFallBack;
 	}
 	
 	
@@ -94,20 +128,7 @@ public class CompraService {
 	 */
 	
 	
-/**
- * 
- * Para entendimento e testes do circuit break e usando mertodo para o Fallback com o Hystrix
- * 
- */
-public Compra realizaCompraFallBack(CompraDTO compra) {
-		
-		LOG.info("Estamos armazenando sua compra e faremos o processo de clunsão após nossas dificuldades tecnicas!");
-				
-		Compra compraSalvaFallBack =  new Compra();		
-		compraSalvaFallBack.setEnderecoDestino(compra.getEndereco().toString());
 
-		LOG.info("Compra guardada com sucesso, em breve informaremos o resumo da compra!");
-		return compraSalvaFallBack;
-	}
+
 
 }

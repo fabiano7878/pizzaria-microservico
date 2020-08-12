@@ -6,9 +6,9 @@ como trabalhar no ambiente de microserviço e um dos metodos de configurar a com
 # restTemplate
 Para ustilização de comnuição de protocolo http de alto nivel, comunicação REST
 
-#Spring Feign
-Aprmorando a aplicação, ele fornece desgne aprimorado através de interface para realizarmos as chamadas dos microserviuçõs e também tem a impleemntação
-do Ribbon que fornece o load balance
+# Spring Feign
+Aprimorando a aplicação, ele fornece designe aprimorado através de interface para realizarmos as chamadas dos microserviçõs externos e também tem a impleemntação do Ribbon que fornece o load balance.
+Nos ajuda a criar chamdas via REST para outro microserviço.
 
 
 # Eureka
@@ -26,6 +26,9 @@ Coinfigurei este serviço como centralizador das configurações de base, ele va
 forma centralizada. Ou seja, o acesso a base de dados do microserviço de forncedor, esta externalizada no ambiente padrão, e está no github, caso precise
 que seja de outro ambiente eu configuro o arquivo para o ambiente epsecifico e todas as instancias vão usar essa configuração.
 
+# repository
+Usei o conceito de repositórie para configuração das instancias que comunicam com a base de dados no Java, e a configuração dessas fica no Config server e acessada pela biblioteca Scpring client, que le um repository criado no github.
+
 # Log4J - logback
 Usei a implementação para gerar os logs e fazer a rastreabilidade dos microserviços
 
@@ -39,3 +42,12 @@ Usei a configuração junto com a do log4j, no logback, para enviar para o parpe
 # Hystrix
 Usei o Hystrix, habilitando o circuit brakercaso há falhas no processo da requisição de compra, usei no metodo realiza compra.
 Com Hystrix também trato o Fallback, através do metodo "realizaCompraFallBack."
+
+
+# Bulkhead de theads
+Neste exemplo entendo como funciona o compartilhamento de theads, o Hystrix consegue liberar 10 threads para cada
+funcionalida, no caso na classe "compraService" temos a funcionalidade de findByIB e "realizaComrpa", e as threads foram compartilhadas adequadamente.
+
+
+# usando Stream Java 8
+Usei em alguns caso a API stream, muito enxuta mas dificulta no entendimento e quando performace em casos bem pontuais, aparenta ser ok.

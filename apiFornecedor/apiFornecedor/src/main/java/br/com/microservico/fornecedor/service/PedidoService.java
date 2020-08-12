@@ -35,11 +35,14 @@ public class PedidoService {
 		LOG.info("Criando e Salvando o pedido");
 		List<PedidoItem> pedidoItens = toPedidoItem(itens);
 		Pedido pedido = new Pedido(pedidoItens);
-		pedido.setTempoDePreparo(calculoTempoPreparo(itens.size()));
+		pedido.setTempoDePreparo(calculoTempoPreparo(pedido.getItens()));
 		return pedidoRepository.save(pedido);
 	}
 	
-	private Integer calculoTempoPreparo(int size) {
+	private Integer calculoTempoPreparo(List <PedidoItem>itensPedido) {
+						
+		int size = itensPedido.stream().mapToInt(PedidoItem::getQuantidade).sum();
+				
 		if(size >= 1) {
 			return size = (size * 30);
 		}
