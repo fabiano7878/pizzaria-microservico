@@ -2,6 +2,8 @@
 Tento simular uma pizzaria nacional, onde a loja pode disparar pedidos a forncedores de outros estados, conforme escolha do cliente, também estudo
 como trabalhar no ambiente de microserviço e um dos metodos de configurar a comunicação entre eles e gerenciamento de acessos.
 
+obs.: o diretório "\pizzaria-microservico\microservice-repo\fornecedor.yml" está presente, caso queira usar a configuração de banco de dados no ambiente que esta o micro serviço e não no github como foi feito na parte final com a evoluação do preojto.
+
 
 # restTemplate
 Para ustilização de comnuição de protocolo http de alto nivel, comunicação REST
@@ -44,7 +46,7 @@ Usei o Hystrix, habilitando o circuit brakercaso há falhas no processo da requi
 Com Hystrix também trato o Fallback, através do metodo "realizaCompraFallBack."
 
 
-# Bulkhead de theads
+# Bulkhead de theads com o Hystrix
 Neste exemplo entendo como funciona o compartilhamento de theads, o Hystrix consegue liberar 10 threads para cada
 funcionalida, no caso na classe "compraService" temos a funcionalidade de findByIB e "realizaComrpa", e as threads foram compartilhadas adequadamente.
 

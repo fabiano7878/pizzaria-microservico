@@ -15,7 +15,7 @@ import br.com.microservico.loja.dto.ItensCompraDTO;
 public interface FornecedorClient {
 	
 	@RequestMapping("/info/{estado}")
-	List <InfoFornecedorDTO> getInfoPorEstado(@PathVariable String estado);
+	InfoFornecedorDTO getInfoPorEstado(@PathVariable String estado);
 	
 	@RequestMapping(method = RequestMethod.POST, value="/pedido")
 	InfoPedidoDTO realizaPedido(List<ItensCompraDTO> itens);

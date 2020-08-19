@@ -1,6 +1,7 @@
 package br.com.microservico.loja.service;
 
-import java.util.List;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,10 +11,13 @@ import org.springframework.stereotype.Service;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 
 import br.com.microservico.loja.client.FornecedorClient;
+import br.com.microservico.loja.client.TransportadorClient;
 import br.com.microservico.loja.dto.CompraDTO;
+import br.com.microservico.loja.dto.InfoEntregaDTO;
 import br.com.microservico.loja.dto.InfoFornecedorDTO;
 import br.com.microservico.loja.dto.InfoPedidoDTO;
 import br.com.microservico.loja.dto.InfoPedidoItemDTO;
+import br.com.microservico.loja.dto.InfoVoucherDTO;
 import br.com.microservico.loja.modelo.Compra;
 import br.com.microservico.loja.repository.CompraRepository;
 
@@ -25,6 +29,9 @@ public class CompraService {
 	
 	@Autowired
 	private CompraRepository compraRepository;
+	
+	@Autowired
+	private TransportadorClient transportadorClient; 
 	
 	private static final Logger LOG = LoggerFactory.getLogger(CompraService.class);
 	
@@ -38,31 +45,51 @@ public class CompraService {
 		 */
 		
 		LOG.info("Buscando informações do fornecedor do Estado: {}", compra.getEndereco().getEstado());
-		List <InfoFornecedorDTO> listaInfo = fornecedorClient.getInfoPorEstado(compra.getEndereco().getEstado());
+		InfoFornecedorDTO infoFornecedor = fornecedorClient.getInfoPorEstado(compra.getEndereco().getEstado());
 		
-		LOG.info("Realizando um pedido");
+		LOG.info("Compra, criando um pedido");
 		InfoPedidoDTO pedido = fornecedorClient.realizaPedido(compra.getItens());
-		
+				
 		Compra compraSalva = new Compra();
-		
 		compraSalva.setIdPedido(pedido.getId());
 		compraSalva.setTempoDePreparo(pedido.getTempoDePreparo());
 		compraSalva.setEnderecoDestino(compra.getEndereco().toString());
 		compraSalva.setItens(compra.getItens().stream().map(Object::toString).reduce("", String::concat));
 		compraSalva.setQuantidadeDeProdutosNaCompra(compra.getItens().size());
 		compraSalva.setTotalDeItensNaCompra(pedido.getItens().stream().mapToInt(InfoPedidoItemDTO::getQuantidade).sum());
-		
-		for(InfoFornecedorDTO fornecedor :listaInfo) {			
-			System.out.println(fornecedor.toString());			
-		}
-		
+				
 		LOG.info("Compra Salva id da compra: {}", compraSalva.getIdPedido());
+		
+		LOG.info("Compra, inicializando dados da Entrega");
+		
+		InfoEntregaDTO encomenda = new InfoEntregaDTO();
+		encomenda.setPedidoId(pedido.getId());
+		encomenda.setEnderecoOrigem(infoFornecedor.getEndereco());
+		encomenda.setEnderecoDestino(compra.getEndereco().toString());		
+		encomenda.setDataParaEntrega(converterDataDeEntrega(pedido.getTempoDePreparo()));
+		
+		//buildByMinutes(10);
+		
+		InfoVoucherDTO voucherDTO =  transportadorClient.reservaEntrega(encomenda);
+		
+		LOG.info("Voucher gerado numero: {}", voucherDTO.getNumero());
 		
 		//Salvando a compra na base de dados
 		compraRepository.save(compraSalva);
 		return compraSalva;
 	}
-	
+
+	private LocalDateTime converterDataDeEntrega(int tempoDePreparo) {
+		
+		LocalDateTime minutos;
+		LocalDateTime novoMinuto;
+		minutos = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
+		
+		//Adiciona minutos a hora corrente
+		novoMinuto = minutos.plusMinutes(tempoDePreparo);		
+		return novoMinuto;
+	}
+
 	/**
 	 * Para consultar compras cadastradas, pelo id do pedido
 	 * @param id
@@ -128,7 +155,5 @@ public class CompraService {
 	 */
 	
 	
-
-
 
 }
