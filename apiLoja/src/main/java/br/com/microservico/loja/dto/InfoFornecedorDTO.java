@@ -44,7 +44,7 @@ public class InfoFornecedorDTO {
 
 	@Override
 	public String toString() {
-		return "InfoFornecedorDTO [id=" + id + ", nome=" + nome + ", endereco=" + endereco + ", estado=" + estado + "]";
+		return "id=" + id + ", nome=" + nome + ", endereco=" + endereco + ", estado=" + estado;
 	}
 	
 }

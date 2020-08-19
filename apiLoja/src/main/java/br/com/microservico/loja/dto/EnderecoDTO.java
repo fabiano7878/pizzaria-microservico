@@ -34,7 +34,7 @@ public class EnderecoDTO {
 
 	@Override
 	public String toString() {
-		return "EnderecoDTO [rua=" + rua + ", numero=" + numero + ", estado=" + estado + "]";
+		return rua + ", " + numero + ". - " + estado;
 	}
 	
 }
