@@ -1,10 +1,18 @@
 package br.com.microservico.loja.modelo;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 public class Compra {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id; 
 	
 	@Id
 	private Long idPedido;
@@ -19,6 +27,17 @@ public class Compra {
 	
 	private int totalDeItensNaCompra;
 	
+	@Enumerated(EnumType.STRING)
+	private CompraStatus estatus;
+	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public Long getIdPedido() {
 		return idPedido;
 	}
@@ -65,6 +84,14 @@ public class Compra {
 
 	public void setTotalDeItensNaCompra(int totalDeItensNaCompra) {
 		this.totalDeItensNaCompra = totalDeItensNaCompra;
+	}
+
+	public CompraStatus getEstatus() {
+		return estatus;
+	}
+
+	public void setEstatus(CompraStatus estatus) {
+		this.estatus = estatus;
 	}
 
 }

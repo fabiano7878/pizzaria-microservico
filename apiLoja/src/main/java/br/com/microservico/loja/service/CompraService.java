@@ -19,6 +19,7 @@ import br.com.microservico.loja.dto.InfoPedidoDTO;
 import br.com.microservico.loja.dto.InfoPedidoItemDTO;
 import br.com.microservico.loja.dto.InfoVoucherDTO;
 import br.com.microservico.loja.modelo.Compra;
+import br.com.microservico.loja.modelo.CompraStatus;
 import br.com.microservico.loja.repository.CompraRepository;
 
 @Service
@@ -43,39 +44,46 @@ public class CompraService {
 		 * try { Thread.sleep(2000); } catch (InterruptedException e) { // 
 		 * Auto-generated catch block e.printStackTrace(); }
 		 */
+
+		Compra compraSalva = new Compra();
+		compraSalva.setEstatus(CompraStatus.RECEBIDO);		
+		compraSalva.setEnderecoDestino(compra.getEndereco().toString());
+		compraSalva.setItens(compra.getItens().stream().map(Object::toString).reduce("", String::concat));
+		compraSalva.setQuantidadeDeProdutosNaCompra(compra.getItens().size());
+		LOG.info("Compra recebida com sucesso! segue id da Compra: {}", compraSalva.getId());
+		compraRepository.save(compraSalva);
+		
+		//Adicionando id a requisição de compra, depois de saltar o estado da compra recebida.
+		compra.setCompraId(compraSalva.getId());
 		
 		LOG.info("Buscando informações do fornecedor do Estado: {}", compra.getEndereco().getEstado());
 		InfoFornecedorDTO infoFornecedor = fornecedorClient.getInfoPorEstado(compra.getEndereco().getEstado());
 		
 		LOG.info("Compra, criando um pedido");
 		InfoPedidoDTO pedido = fornecedorClient.realizaPedido(compra.getItens());
-				
-		Compra compraSalva = new Compra();
-		compraSalva.setIdPedido(pedido.getId());
+		
+		compraSalva.setEstatus(CompraStatus.PEDIDO_REALIZADO);
+		compraSalva.setIdPedido(pedido.getId());		
 		compraSalva.setTempoDePreparo(pedido.getTempoDePreparo());
-		compraSalva.setEnderecoDestino(compra.getEndereco().toString());
-		compraSalva.setItens(compra.getItens().stream().map(Object::toString).reduce("", String::concat));
-		compraSalva.setQuantidadeDeProdutosNaCompra(compra.getItens().size());
 		compraSalva.setTotalDeItensNaCompra(pedido.getItens().stream().mapToInt(InfoPedidoItemDTO::getQuantidade).sum());
-				
-		LOG.info("Compra Salva id da compra: {}", compraSalva.getIdPedido());
+		compraRepository.save(compraSalva);
+		LOG.info("Pedido Realizado com sucesso! segue id do pedido: {}", compraSalva.getIdPedido());		
 		
-		LOG.info("Compra, inicializando dados da Entrega");
-		
+		LOG.info("Pedido enviado para transportadora: ");		
 		InfoEntregaDTO encomenda = new InfoEntregaDTO();
 		encomenda.setPedidoId(pedido.getId());
 		encomenda.setEnderecoOrigem(infoFornecedor.getEndereco());
 		encomenda.setEnderecoDestino(compra.getEndereco().toString());		
 		encomenda.setDataParaEntrega(converterDataDeEntrega(pedido.getTempoDePreparo()));
+		LOG.info("Entrega gerada com sucesso, Id do pedido :{}", encomenda.getPedidoId());
 		
-		//buildByMinutes(10);
-		
+		LOG.info("Iniciando geração do Voucher do pedido {}", encomenda.getPedidoId());
 		InfoVoucherDTO voucherDTO =  transportadorClient.reservaEntrega(encomenda);
-		
-		LOG.info("Voucher gerado numero: {}", voucherDTO.getNumero());
+		LOG.info("Voucher gerado com sucesso! numero: {}", voucherDTO.getNumero());
+		compraSalva.setEstatus(CompraStatus.PEDIDO_ENVIADO);
+		compraRepository.save(compraSalva);
 		
 		//Salvando a compra na base de dados
-		compraRepository.save(compraSalva);
 		return compraSalva;
 	}
 
@@ -105,13 +113,13 @@ public class CompraService {
 	 * Para entendimento e testes do circuit break e usando mertodo para o Fallback com o Hystrix
 	 * 
 	 */
-	public Compra realizaCompraFallBack(CompraDTO compra) {
-		
-		LOG.info("Estamos armazenando sua compra e faremos o processo de conclusão após nossas dificuldades tecnicas!");
-		
+	public Compra realizaCompraFallBack(CompraDTO compra) {		
+		if(compra.getCompraId() != null) {
+			return compraRepository.findById(compra.getCompraId()).get();
+		}		
+		LOG.info("Estamos armazenando sua compra e faremos o processo de conclusão após nossas dificuldades tecnicas!");		
 		Compra compraSalvaFallBack =  new Compra();		
-		compraSalvaFallBack.setEnderecoDestino(compra.getEndereco().toString());
-		
+		compraSalvaFallBack.setEnderecoDestino(compra.getEndereco().toString());		
 		LOG.info("Compra guardada com sucesso, em breve informaremos o resumo da compra!");
 		return compraSalvaFallBack;
 	}
