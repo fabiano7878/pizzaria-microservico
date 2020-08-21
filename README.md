@@ -14,6 +14,7 @@ Nos ajuda a criar chamdas via REST para outro microserviço.
 
 
 # Eureka
+Eureka tem a abilidade de fazer os nossos microsserviços se comuniquem entre si,tanto para se disponibilizarem como para descobrir instâncias de outros microsserviços.
 Um introdução ao Service discovery e Service registry
 Service registry é um servidor central, onde todos os microsserviços ficam cadastrados (nome e IP/porta)
 Service discovery é um mecanismo de descoberta do IP do microsserviço pelo nome
@@ -53,3 +54,15 @@ funcionalida, no caso na classe "compraService" temos a funcionalidade de findBy
 
 # usando Stream Java 8
 Usei em alguns caso a API stream, muito enxuta mas dificulta no entendimento e quando performace em casos bem pontuais, aparenta ser ok.
+
+
+# zuul
+Tem a abilidade de acessar o Eureka e descobrir quais microserviçoes estão disponiveis para acessar.
+
+
+# Spring Security e Spring Cloud OAuth2 + Feign
+Usei o 2 para para criar o microserviço de Autenticação entre, as requisições do cliente, tanto no scopo web ou mobile, integrando os 2, expondo os recusos do Spring Security AuthenticationManager e UserDetailServiceconsigo  injetaar os Adapter do Spring Cloud OAuth2: o AuthorizationServerConfigurerAdapter. Mais especificamente, a integração é feita no método configure deste adapter.
+
+Colocamos um usuários para acesso do auntenticador que nos gera um token, que irá trafegar pelos microserviçõs e usar-lo para conseguir ois dados do cliente.
+
+Usamos o Feign para nos ajudar a tramitar os dados do header, pois as threads foram gerenciadas pelo Hystrix e não compartilham conteudo, fizemos o Hystrix compartilhar os dados e passar os dados de Authorization para o então o Feign conseguir atrvés da interface RequestInterceptor ter os dados de Authenticação.

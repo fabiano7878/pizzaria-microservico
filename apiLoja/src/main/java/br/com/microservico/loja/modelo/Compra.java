@@ -14,7 +14,6 @@ public class Compra {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id; 
 	
-	@Id
 	private Long idPedido;
 	
 	private int tempoDePreparo;

@@ -24,7 +24,7 @@ public class ItensCompraDTO {
 
 	@Override
 	public String toString() {
-		return "id=" + id + ", quantidade=" + quantidade;
+		return "id=" + id + ", quantidade=" + quantidade+" ";
 	}	
 	
 }

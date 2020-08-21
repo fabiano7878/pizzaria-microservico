@@ -48,7 +48,7 @@ public class CompraService {
 		Compra compraSalva = new Compra();
 		compraSalva.setEstatus(CompraStatus.RECEBIDO);		
 		compraSalva.setEnderecoDestino(compra.getEndereco().toString());
-		compraSalva.setItens(compra.getItens().stream().map(Object::toString).reduce("", String::concat));
+		compraSalva.setItens(compra.getItens().stream().map(Object::toString).reduce(" ", String::concat));
 		compraSalva.setQuantidadeDeProdutosNaCompra(compra.getItens().size());
 		LOG.info("Compra recebida com sucesso! segue id da Compra: {}", compraSalva.getId());
 		compraRepository.save(compraSalva);

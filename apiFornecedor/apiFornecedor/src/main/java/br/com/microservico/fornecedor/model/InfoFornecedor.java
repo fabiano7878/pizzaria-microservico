@@ -49,5 +49,9 @@ public class InfoFornecedor {
 	public void setEstado(String estado) {
 		this.estado = estado;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "id=" + id + ", nome=" + nome + ", endereco=" + endereco + ", estado=" + estado;
+	}	
 }

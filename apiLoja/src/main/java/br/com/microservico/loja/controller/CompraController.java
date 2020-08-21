@@ -1,6 +1,8 @@
 package br.com.microservico.loja.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +26,8 @@ public class CompraController {
 	}
 	
 	@RequestMapping("/{id}")
-	public Compra consultaCompra(@PathVariable("id") Long id ) {
+	public Compra getById(@PathVariable("id") Long id ) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		return compraService.getById(id);
 	}
 }
