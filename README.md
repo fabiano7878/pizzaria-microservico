@@ -43,7 +43,7 @@ Usei a configuração junto com a do log4j, no logback, para enviar para o parpe
 
 
 # Hystrix
-Usei o Hystrix, habilitando o circuit brakercaso há falhas no processo da requisição de compra, usei no metodo realiza compra.
+Usei o Hystrix, habilitando o circuit braker para algum caso de falhas no processo de compra.
 Com Hystrix também trato o Fallback, através do metodo "realizaCompraFallBack."
 
 
@@ -53,7 +53,7 @@ funcionalida, no caso na classe "compraService" temos a funcionalidade de findBy
 
 
 # usando Stream Java 8
-Usei em alguns caso a API stream, muito enxuta mas dificulta no entendimento e quando performace em casos bem pontuais, aparenta ser ok.
+Usei em alguns caso a API stream, muito inicialmente para quem nunca usou o entendimento de programação funcional e lambda o entendimento fica um pouco mais complexos, pois as informações ficam implicitas e precisa conhecer bem a api para entender o que ocorre por trás, quando a sua performace não posso afirmar se ficoumais rápida, produtividade sim, m,uito menos código a se criar.
 
 
 # zuul
