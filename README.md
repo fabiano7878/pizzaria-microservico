@@ -24,10 +24,11 @@ Com o
 Service Discovery eu faço o Gerenciamento dos acessos dos microserviços, resolução de dominios, também defino as informações de como cada microserviço encontra o destino de sua requisição em outro microserviço pela rede.
 
 # SpringConfig
-Que o Spring Config Server é uma implementação do servidor do projeto Spring Cloud
+O Spring Config Server é uma implementação do servidor do projeto Spring Cloud
 Coinfigurei este serviço como centralizador das configurações de base, ele vai fornceer incialmente toda configuração externa para os microservições de
-forma centralizada. Ou seja, o acesso a base de dados do microserviço de forncedor, esta externalizada no ambiente padrão, e está no github, caso precise
-que seja de outro ambiente eu configuro o arquivo para o ambiente epsecifico e todas as instancias vão usar essa configuração.
+forma centralizada. 
+Como boa prátivca de reutilização, centralizei so acessos a base de dados e externalizei em repo do git a configuração especifica de cada microserviço fornecedor.
+Fica fácil disponibilizar os recursos para todos os microserviços e quem gerencia isso muito bem é o Spring config.
 
 # repository
 Usei o conceito de repositórie para configuração das instancias que comunicam com a base de dados no Java, e a configuração dessas fica no Config server e acessada pela biblioteca Scpring client, que le um repository criado no github.
