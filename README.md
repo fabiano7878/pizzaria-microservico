@@ -14,14 +14,14 @@ Nos ajuda a criar chamdas via REST para outro microserviço.
 
 
 # Eureka
-Eureka tem a abilidade de fazer os nossos microsserviços se comuniquem entre si,tanto para se disponibilizarem como para descobrir instâncias de outros microsserviços.
-Um introdução ao Service discovery e Service registry
-Service registry é um servidor central, onde todos os microsserviços ficam cadastrados (nome e IP/porta)
-Service discovery é um mecanismo de descoberta do IP do microsserviço pelo nome
-Dessa forma, nenhum microsserviço fica acoplado ao outro pelo IP/porta
-A resolução do IP/porta através do nome do microsserviço nas requisições
-Gerenciamento dos acessos dos microserviços, resolução de dominios, nele eu defino as informações de como cada microserviço encontra o destino de sua
-requisição em outro microserviço pela rede.
+Eureka tem a habilidade de fazer os microsserviços se comunicarem entre si, tanto para se disponibilizarem como serviço como para descobrir instâncias de outros microsserviços.
+
+Uma introdução ao Service discovery e Service registry
+- Service registry é um servidor central, onde todos os microsserviços ficam cadastrados (nome e IP/porta)
+- Service discovery é um mecanismo de descoberta do IP do microsserviço pelo nome. Dessa forma, nenhum microsserviço fica acoplado ao outro pelo IP/porta
+a resolução do IP/porta é através do nome do microsserviço nas requisições.
+Com o 
+Service Discovery eu faço o Gerenciamento dos acessos dos microserviços, resolução de dominios, também defino as informações de como cada microserviço encontra o destino de sua requisição em outro microserviço pela rede.
 
 # SpringConfig
 Que o Spring Config Server é uma implementação do servidor do projeto Spring Cloud
