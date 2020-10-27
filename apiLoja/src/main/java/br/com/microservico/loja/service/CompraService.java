@@ -50,11 +50,12 @@ public class CompraService {
 		compraSalva.setEnderecoDestino(compra.getEndereco().toString());
 		compraSalva.setItens(compra.getItens().stream().map(Object::toString).reduce(" ", String::concat));
 		compraSalva.setQuantidadeDeProdutosNaCompra(compra.getItens().size());
-		LOG.info("Compra recebida com sucesso! segue id da Compra: {}", compraSalva.getId());
+		LOG.info("Recebendo a compra mas ainda não tenho um Id :-( : {}", compraSalva.getId());
 		compraRepository.save(compraSalva);
 		
 		//Adicionando id a requisição de compra, depois de saltar o estado da compra recebida.
 		compra.setCompraId(compraSalva.getId());
+		LOG.info("Compra recebida com sucesso! segue id da Compra: {}", compraSalva.getId());
 		
 		LOG.info("Buscando informações do fornecedor do Estado: {}", compra.getEndereco().getEstado());
 		InfoFornecedorDTO infoFornecedor = fornecedorClient.getInfoPorEstado(compra.getEndereco().getEstado());
