@@ -55,7 +55,7 @@ funcionalida, no caso na classe "compraService" temos a funcionalidade de findBy
 
 
 # zuul (API Gateway)
-É a API Gateway, tem à abilidade de acessar o Eureka e descobrir quais microserviçoes estão disponiveis para acessar.
+É a API Gateway, tem à habilidade de acessar o Eureka e descobrir quais microserviçoes estão disponiveis para acessar.
 
 
 
